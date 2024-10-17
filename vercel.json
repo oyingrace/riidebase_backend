@@ -20,7 +20,7 @@
       "dest": "server.ts"
     },
     {
-      "src": "/ride/:id",
+      "src": "/:id",
       "dest": "server.ts"
     }
   ]
