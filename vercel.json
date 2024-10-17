@@ -20,6 +20,7 @@
       "dest": "server.ts"
     },
     {
+      "src": "/([0-9]+)",
       "dest": "server.ts"
     }
   ]
