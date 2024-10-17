@@ -1,16 +1,29 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "api/*.ts",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "api/$1.ts"
-      }
-    ]
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/driver",
+      "dest": "server.ts"
+    },
+    {
+      "src": "/user",
+      "dest": "server.ts"
+    },
+    {
+      "src": "/ride",
+      "dest": "server.ts"
+    },
+    {
+      "src": "/ride/test",
+      "dest": "server.ts"
+    }
+  ]
+}
+
   
