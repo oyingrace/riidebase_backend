@@ -39,10 +39,10 @@ app.get('/', (req, res) => {
 });
 
 // Set up your API routes
-app.use('/api/driver', handleApiRoute(driverApi));
-app.use('/api/user', handleApiRoute(userApi));
-app.post('/api/ride', handleApiRoute(createRideApi));
-app.get('/api/ride/:id', handleApiRoute(getRideApi));
+app.use('/driver', handleApiRoute(driverApi));
+app.use('/user', handleApiRoute(userApi));
+app.post('/ride', handleApiRoute(createRideApi));
+app.get('/ride/:id', handleApiRoute(getRideApi));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
