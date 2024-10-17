@@ -38,7 +38,7 @@ export async function GET(request: Request) {
         INNER JOIN
             drivers ON rides.driver_id = drivers.id
         WHERE 
-        rides.ride_id = ${id}
+        rides.user_id = ${id}
         ORDER BY 
             rides.created_at DESC;
     `;
