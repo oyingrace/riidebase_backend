@@ -20,7 +20,6 @@
       "dest": "server.ts"
     },
     {
-      "src": "/:id",
       "dest": "server.ts"
     }
   ]
