@@ -20,7 +20,11 @@
       "dest": "server.ts"
     },
     {
-      "src": "/([0-9]+)",
+      "src": "/(?<id>[^/]+)",
+      "dest": "server.ts"
+    },
+    {
+      "src": "/(.*)",
       "dest": "server.ts"
     }
   ]
