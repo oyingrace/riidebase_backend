@@ -1,17 +1,26 @@
-import express, { Request, Response } from 'express'; // Import Request and Response types
+
 import { neon } from "@neondatabase/serverless";
 
-export async function GET(request: Request) {
-  // Use 'request.params' to get the id if you set up your server to use express-style routing
-  const id = request.params.id; // This line assumes the request is an Express request
+export async function GET(request: any, context: any) {
+  const id = request.params?.id || request.query?.id;
+
+  console.log(`Received request for user ID: ${id}`);
 
   if (!id) {
-    return Response.json({ error: "Missing required fields" }, { status: 400 });
+    console.log('Missing ID in request');
+    return new Response(JSON.stringify({ error: "Missing required fields" }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
+
+  // Ensure the id is in the correct format
+  const userId = id.startsWith('user_') ? id : `user_${id}`;
 
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
-    const response = await sql`
+    console.log(`Executing SQL query for user ID: ${userId}`);
+    const result = await sql`
         SELECT
             rides.ride_id,
             rides.origin_address,
@@ -24,7 +33,7 @@ export async function GET(request: Request) {
             rides.fare_price,
             rides.payment_status,
             rides.created_at,
-            'driver', json_build_object(
+            json_build_object(
                 'driver_id', drivers.id,
                 'first_name', drivers.first_name,
                 'last_name', drivers.last_name,
@@ -38,15 +47,22 @@ export async function GET(request: Request) {
         INNER JOIN
             drivers ON rides.driver_id = drivers.id
         WHERE 
-        rides.user_id = ${id}
+            rides.user_id = ${userId}
         ORDER BY 
             rides.created_at DESC;
     `;
 
-    return Response.json({ data: response });
+    console.log(`Query result:`, result);
+
+    return new Response(JSON.stringify({ data: result }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error("Error fetching recent rides:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
-
