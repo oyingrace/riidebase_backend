@@ -17,6 +17,7 @@
     },
     {
       "src": "/ride",
+      "methods": ["POST"],
       "dest": "server.ts"
     },
     {

@@ -16,14 +16,25 @@ const neonConnectionString = process.env.DATABASE_URL;
 
 app.use(express.json());
 
-// Middleware to handle Next.js-like API routes
 const handleApiRoute = (apiModule: any) => async (req: express.Request, res: express.Response) => {
   const method = req.method?.toUpperCase();
   if (method && apiModule[method]) {
     try {
       const response = await apiModule[method](req);
-      const data = await response.json();
-      res.status(response.status).json(data);
+      
+      if (!response) {
+        res.status(404).json({ error: 'No data found' });
+        return;
+      }
+
+      if (typeof response.json === 'function') {
+        // If response is a Fetch API-like response object
+        const data = await response.json();
+        res.status(response.status || 200).json(data);
+      } else {
+        // For other cases where response is directly the data
+        res.status(200).json(response);
+      }
     } catch (error) {
       console.error('Error in API route:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -32,6 +43,8 @@ const handleApiRoute = (apiModule: any) => async (req: express.Request, res: exp
     res.status(405).json({ error: 'Method Not Allowed' });
   }
 };
+
+
 
 // Root route
 app.get('/', (req, res) => {
