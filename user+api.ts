@@ -1,7 +1,7 @@
 
 import { neon } from "@neondatabase/serverless";
 
-/*export async function GET(request: Request) {
+export async function GET(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
     
@@ -16,41 +16,7 @@ import { neon } from "@neondatabase/serverless";
     console.error("Error fetching users:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
-} */
-
-export async function GET(request: Request) {
-  try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
-    const { searchParams } = new URL(request.url);
-    const clerkId = searchParams.get("clerk_id");
-
-    // If clerk_id is provided, fetch a specific user by clerk_id
-    if (clerkId) {
-      const response = await sql`
-        SELECT * FROM users WHERE clerk_id = ${clerkId};
-      `;
-      if (response.length === 0) {
-        return Response.json(
-          { error: "User not found" },
-          { status: 404 }
-        );
-      }
-      return new Response(JSON.stringify({ data: response[0] }), {
-        status: 200,
-      });
-    }
-
-    // Query to select all users if clerk_id is not provided
-    const response = await sql`SELECT * FROM users;`;
-
-    return new Response(JSON.stringify({ data: response }), {
-      status: 200,
-    });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
-  }
-}
+} 
 
 export async function POST(request: Request) {
   try {
